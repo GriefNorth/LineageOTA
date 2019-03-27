@@ -1,5 +1,5 @@
 FROM php:7.1-apache
-MAINTAINER Julian Xhokaxhiu <info at julianxhokaxhiu dot com>
+MAINTAINER Alexander Postol <grief.north at gmail dot com>
 
 # internal variables
 ENV HTML_DIR /var/www/html
@@ -8,8 +8,13 @@ ENV FULL_BUILDS_DIR $HTML_DIR/builds/full
 # set the working directory
 WORKDIR $HTML_DIR
 
+# install ssl cert 
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/ssl-cert-snakeoil.key -out /etc/ssl/certs/ssl-cert-snakeoil.pem -subj "/C=RU/ST=Penzenskaya/L=Penza/O=Security/OU=Development/CN=example.com"
+
 # enable mod_rewrite
 RUN a2enmod rewrite
+RUN a2ensite default-ssl
+RUN a2enmod ssl
 
 # install the PHP extensions we need
 RUN apt-get update \
@@ -52,3 +57,6 @@ RUN chmod -R 0775 /var/www/html \
 
 # create volumes
 VOLUME $FULL_BUILDS_DIR
+
+EXPOSE 80
+EXPOSE 443
