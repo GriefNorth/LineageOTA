@@ -1,0 +1,8 @@
+web:
+  build: .
+  restart: always
+  ports:
+    - "80:80"
+    - "443:443"
+  volumes:
+    - ./builds:/var/www/html/builds/full
